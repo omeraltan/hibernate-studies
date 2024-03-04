@@ -10,10 +10,7 @@ import java.util.Date;
 
 public class PojoApp {
     public static void main(String[] args) {
-
         Date date = new Date();
-
-
         Pojo pojo = new Pojo();
         pojo.setName("Omer");
         pojo.setItem(new BigDecimal("5.12"));
