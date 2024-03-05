@@ -15,8 +15,10 @@ public class HibernateUtil {
             //cfg.addAnnotatedClass(FingerPrint.class);
             //cfg.addAnnotatedClass(Book.class);
             //cfg.addAnnotatedClass(Author.class);
-            cfg.addAnnotatedClass(Country.class);
-            cfg.addAnnotatedClass(City.class);
+            //cfg.addAnnotatedClass(Country.class);
+            //cfg.addAnnotatedClass(City.class);
+            cfg.addAnnotatedClass(Product.class);
+            cfg.addAnnotatedClass(ProductType.class);
             SessionFactory sessionFactory = cfg.configure("hibernate.cfg.xml").buildSessionFactory();
             return sessionFactory;
         }catch (Exception e){
