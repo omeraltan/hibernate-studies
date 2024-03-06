@@ -4,12 +4,14 @@ import domain.Product;
 import domain.ProductType;
 import dto.ProductDto;
 import dto.ProductInformationDto;
+import dto.ProductTypeDto;
 import enums.EnumUnit;
 import hibernate.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -111,5 +113,36 @@ public class ProductDao {
             " WHERE u.productType.id = t.id ");
 
         return query.list();
+    }
+
+    public BigDecimal findMinProductPrice(){
+        Session session = sessionFactory.openSession();
+        Query query = session.createQuery(" SELECT MIN (u.price) FROM Product u");
+        return (BigDecimal) query.uniqueResult();
+    }
+
+    public BigDecimal findMaxProductPrice(){
+        Session session = sessionFactory.openSession();
+        Query query = session.createQuery(" SELECT MAX (u.price) FROM Product u");
+        return (BigDecimal) query.uniqueResult();
+    }
+
+    public List<ProductTypeDto> findAllProductTypeDto(){
+        Session session = sessionFactory.openSession();
+        Query query = session.createQuery(" SELECT new dto.ProductTypeDto( " +
+            " b.id, " +
+            " b.name, " +
+            " min(a.price), " +
+            " max(a.price), " +
+            " avg(a.price), " +
+            " sum(a.stockAmount), " +
+            " count(a.id) " +
+            " ) " +
+            " FROM Product a, ProductType  b " +
+            " WHERE a.id = b.id " +
+            " GROUP BY a.id, b.id");
+
+        return query.list();
+
     }
 }

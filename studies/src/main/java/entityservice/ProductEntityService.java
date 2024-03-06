@@ -5,8 +5,10 @@ import domain.Product;
 import domain.ProductType;
 import dto.ProductDto;
 import dto.ProductInformationDto;
+import dto.ProductTypeDto;
 import enums.EnumUnit;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -67,5 +69,17 @@ public class ProductEntityService {
 
     public List<ProductInformationDto> findAllProductInformationDto(){
         return productDao.findAllProductInformationDto();
+    }
+
+    public BigDecimal findMinProductPrice(){
+        return productDao.findMinProductPrice();
+    }
+
+    public BigDecimal findMaxProductPrice(){
+        return productDao.findMaxProductPrice();
+    }
+
+    public List<ProductTypeDto> findAllProductTypeDto(){
+        return productDao.findAllProductTypeDto();
     }
 }
