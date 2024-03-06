@@ -82,4 +82,12 @@ public class ProductEntityService {
     public List<ProductTypeDto> findAllProductTypeDto(){
         return productDao.findAllProductTypeDto();
     }
+
+    public List<Product> callProductFindAll(){
+        return productDao.callProductFindAll();
+    }
+
+    public List<Product> callFindProductBetween(BigDecimal min, BigDecimal max){
+        return productDao.callFindProductBetween(min, max);
+    }
 }

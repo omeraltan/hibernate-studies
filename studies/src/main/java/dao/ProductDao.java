@@ -9,6 +9,7 @@ import enums.EnumUnit;
 import hibernate.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 
 import java.math.BigDecimal;
@@ -143,6 +144,20 @@ public class ProductDao {
             " GROUP BY a.id, b.id");
 
         return query.list();
+    }
 
+    public List<Product> callProductFindAll(){
+        Session session = sessionFactory.openSession();
+        NativeQuery<Product> nativeQuery = session.createNativeQuery(" {call product_findAll()} ", Product.class);
+        return nativeQuery.list();
+    }
+
+    public List<Product> callFindProductBetween(BigDecimal min, BigDecimal max){
+        Session session = sessionFactory.openSession();
+        NativeQuery<Product> nativeQuery = session.createNativeQuery(" { call find_product_between(:min, :max)} ", Product.class);
+        nativeQuery.setParameter("min", min);
+        nativeQuery.setParameter("max", max);
+
+        return nativeQuery.list();
     }
 }
