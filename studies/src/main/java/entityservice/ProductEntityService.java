@@ -90,4 +90,9 @@ public class ProductEntityService {
     public List<Product> callFindProductBetween(BigDecimal min, BigDecimal max){
         return productDao.callFindProductBetween(min, max);
     }
+
+    /** Criteria */
+    public List<Product> findAllWithCriteria(){
+        return productDao.findAllWithCriteria();
+    }
 }

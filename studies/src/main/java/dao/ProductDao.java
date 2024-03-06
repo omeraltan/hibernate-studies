@@ -12,6 +12,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -27,6 +29,14 @@ public class ProductDao {
         Session session = sessionFactory.openSession();
         Query query = session.createQuery(" SELECT u FROM Product u ");
         return query.list();
+    }
+
+    public List<Product> findAllWithCriteria(){
+        Session session = sessionFactory.openSession();
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<Product> query = criteriaBuilder.createQuery(Product.class);
+        query.from(Product.class);
+        return session.createQuery(query).getResultList();
     }
 
     public Product findById(Long id){
