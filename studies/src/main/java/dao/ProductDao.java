@@ -7,6 +7,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 
+import java.util.Date;
 import java.util.List;
 
 public class ProductDao {
@@ -44,6 +45,26 @@ public class ProductDao {
         query.setParameter("min", min);
         query.setParameter("max", max);
 
+        return query.list();
+    }
+
+    public List<Product> findAllWithOrder(){
+        Session session = sessionFactory.openSession();
+        Query query = session.createQuery(" SELECT u FROM Product u" + " ORDER BY u.stockAmount, u.name");
+        return query.list();
+    }
+
+    public List<Product> findAllWithOrderByLimit(int maxResult){
+        Session session = sessionFactory.openSession();
+        Query query = session.createQuery(" SELECT u FROM Product u" + " ORDER BY u.stockAmount DESC , u.name ASC ");
+        query.setMaxResults(maxResult);
+        return query.list();
+    }
+
+    public List<Product> findAllProductListByExpirationDateGe(Date date){
+        Session session = sessionFactory.openSession();
+        Query query = session.createQuery(" SELECT u FROM Product u WHERE u.expirationDate >= :date");
+        query.setParameter("date",date);
         return query.list();
     }
 }

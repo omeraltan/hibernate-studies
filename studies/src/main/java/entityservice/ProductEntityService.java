@@ -4,6 +4,7 @@ import dao.ProductDao;
 import domain.Product;
 import domain.ProductType;
 
+import java.util.Date;
 import java.util.List;
 
 public class ProductEntityService {
@@ -28,5 +29,16 @@ public class ProductEntityService {
 
     public List<Product> findAllProductListByStockAmountBetweenMinAndMax(Long min, Long max){
         return productDao.findAllProductListByStockAmountBetweenMinAndMax(min, max);
+    }
+
+    public List<Product> findAllWithOrder(){
+        return productDao.findAllWithOrder();
+    }
+    public List<Product> findAllWithOrderByLimit(int maxResult){
+        return productDao.findAllWithOrderByLimit(maxResult);
+    }
+
+    public List<Product> findAllProductListByExpirationDateGe(Date date){
+        return productDao.findAllProductListByExpirationDateGe(date);
     }
 }
