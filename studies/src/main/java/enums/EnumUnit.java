@@ -1,7 +1,7 @@
 package enums;
 
 public enum EnumUnit {
-    PIECE("piece"), WEIGHT("weight"), LITER("liter"), PORTION("portion"), pack("pack");
+    PIECE("PIECE"), WEIGHT("WEIGHT"), LITER("LITER"), PORTION("PORTION"), PACK("PACK");
 
     private final String unit;
 
