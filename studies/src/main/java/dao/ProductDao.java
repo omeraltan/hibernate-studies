@@ -2,6 +2,9 @@ package dao;
 
 import domain.Product;
 import domain.ProductType;
+import dto.ProductDto;
+import dto.ProductInformationDto;
+import enums.EnumUnit;
 import hibernate.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -65,6 +68,48 @@ public class ProductDao {
         Session session = sessionFactory.openSession();
         Query query = session.createQuery(" SELECT u FROM Product u WHERE u.expirationDate >= :date");
         query.setParameter("date",date);
+        return query.list();
+    }
+
+    public Long sumProductAmountByProductTypeId(Long productType){
+        Session session = sessionFactory.openSession();
+        Query query = session.createQuery(" SELECT SUM(u.stockAmount) FROM Product u" + " WHERE productType.id = :productType");
+        query.setParameter("productType",productType);
+        return (Long) query.uniqueResult();
+    }
+
+    public Long countProductAmountByProductTypeId(Long productTypeId){
+        Session session = sessionFactory.openSession();
+        Query query = session.createQuery(" SELECT COUNT(u) FROM Product u" + " WHERE productType.id = :productTypeId");
+        query.setParameter("productTypeId",productTypeId);
+        return (Long) query.uniqueResult();
+    }
+
+    public List<EnumUnit> findAllProductUnit(){
+        Session session = sessionFactory.openSession();
+        Query query = session.createQuery(" SELECT DISTINCT (u.enumUnit) FROM Product u");
+        return query.list();
+    }
+
+    public Double findAverageStockAmount(){
+        Session session = sessionFactory.openSession();
+        Query query = session.createQuery(" SELECT AVG (u.stockAmount) FROM Product u");
+        return (Double) query.uniqueResult();
+    }
+
+    public List<ProductDto> findAllProductDto(){
+        Session session = sessionFactory.openSession();
+        Query query = session.createQuery(" SELECT " + " new dto.ProductDto(u.id, u.name, u.price) " + " FROM Product u");
+        return query.list();
+    }
+
+    public List<ProductInformationDto> findAllProductInformationDto(){
+        Session session = sessionFactory.openSession();
+        Query query = session.createQuery(" SELECT " +
+            " new dto.ProductInformationDto( u.id,u.name, u.price, t.name, t.enumProductType ) " +
+            " FROM Product u, ProductType t" +
+            " WHERE u.productType.id = t.id ");
+
         return query.list();
     }
 }

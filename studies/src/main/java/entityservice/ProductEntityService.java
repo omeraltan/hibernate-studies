@@ -3,6 +3,9 @@ package entityservice;
 import dao.ProductDao;
 import domain.Product;
 import domain.ProductType;
+import dto.ProductDto;
+import dto.ProductInformationDto;
+import enums.EnumUnit;
 
 import java.util.Date;
 import java.util.List;
@@ -40,5 +43,29 @@ public class ProductEntityService {
 
     public List<Product> findAllProductListByExpirationDateGe(Date date){
         return productDao.findAllProductListByExpirationDateGe(date);
+    }
+
+    public Long sumProductAmountByProductTypeId(Long productType){
+        return productDao.sumProductAmountByProductTypeId(productType);
+    }
+
+    public Long countProductAmountByProductTypeId(Long productTypeId){
+        return productDao.countProductAmountByProductTypeId(productTypeId);
+    }
+
+    public List<EnumUnit> findAllProductUnit(){
+        return productDao.findAllProductUnit();
+    }
+
+    public Double findAverageStockAmount(){
+        return productDao.findAverageStockAmount();
+    }
+
+    public List<ProductDto> findAllProductDto(){
+        return productDao.findAllProductDto();
+    }
+
+    public List<ProductInformationDto> findAllProductInformationDto(){
+        return productDao.findAllProductInformationDto();
     }
 }
