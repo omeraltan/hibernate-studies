@@ -5,6 +5,7 @@ import domain.ProductType;
 import dto.ProductDto;
 import dto.ProductInformationDto;
 import dto.ProductTypeDto;
+import enums.EnumProductType;
 import enums.EnumUnit;
 import hibernate.HibernateUtil;
 import org.hibernate.Session;
@@ -161,6 +162,25 @@ public class ProductDao {
         return (Long) query.uniqueResult();
     }
 
+    public Long countProductAmountByProductTypeIdWithCriteria(Long productTypeId){
+        Session session = sessionFactory.openSession();
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<Long> query = criteriaBuilder.createQuery(Long.class);
+        Root<Product> root = query.from(Product.class);
+        query.select(criteriaBuilder.count(root.get("id")));
+        query.where(criteriaBuilder.equal(root.get("productType").get("id"), productTypeId));
+        return session.createQuery(query).uniqueResult();
+    }
+
+    public Long sumProductAmountByProductTypeIdWithCriteria(){
+        Session session = sessionFactory.openSession();
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<Long> query = criteriaBuilder.createQuery(Long.class);
+        Root<Product> root = query.from(Product.class);
+        query.select(criteriaBuilder.sumAsLong(root.get("stockAmount")));
+        return session.createQuery(query).uniqueResult();
+    }
+
     public List<EnumUnit> findAllProductUnit(){
         Session session = sessionFactory.openSession();
         Query query = session.createQuery(" SELECT DISTINCT (u.enumUnit) FROM Product u");
@@ -173,10 +193,32 @@ public class ProductDao {
         return (Double) query.uniqueResult();
     }
 
+    public Double findAverageStockAmountWithCriteria(){
+        Session session = sessionFactory.openSession();
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<Double> query = criteriaBuilder.createQuery(Double.class);
+        Root<Product> root = query.from(Product.class);
+        query.select(criteriaBuilder.avg(root.get("stockAmount")));
+        return session.createQuery(query).uniqueResult();
+    }
+
     public List<ProductDto> findAllProductDto(){
         Session session = sessionFactory.openSession();
         Query query = session.createQuery(" SELECT " + " new dto.ProductDto(u.id, u.name, u.price) " + " FROM Product u");
         return query.list();
+    }
+
+    public List<ProductDto> findAllProductDtoWithCriteria(){
+        Session session = sessionFactory.openSession();
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<ProductDto> query = criteriaBuilder.createQuery(ProductDto.class);
+        Root<Product> root = query.from(Product.class);
+        query.select(criteriaBuilder.construct(ProductDto.class,
+            root.get("id"),
+            root.get("name"),
+            root.get("price")
+            ));
+        return session.createQuery(query).list();
     }
 
     public List<ProductInformationDto> findAllProductInformationDto(){
@@ -189,16 +231,51 @@ public class ProductDao {
         return query.list();
     }
 
+    public List<ProductInformationDto> findAllProductInformationDtoWithCriteria(){
+        Session session = sessionFactory.openSession();
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<ProductInformationDto> query = criteriaBuilder.createQuery(ProductInformationDto.class);
+        Root<Product> root = query.from(Product.class);
+        root.join("productTypeName", JoinType.INNER);
+        query.select(criteriaBuilder.construct(
+            ProductInformationDto.class,
+            root.get("id"),
+            root.get("name"),
+            root.get("price")
+            //root.get("productTypeName"),
+            //root.get("enumProductType")
+        ));
+        return session.createQuery(query).list();
+    }
+
     public BigDecimal findMinProductPrice(){
         Session session = sessionFactory.openSession();
         Query query = session.createQuery(" SELECT MIN (u.price) FROM Product u");
         return (BigDecimal) query.uniqueResult();
     }
 
+    public BigDecimal findMinProductPriceWithCriteria(){
+        Session session = sessionFactory.openSession();
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<BigDecimal> query = criteriaBuilder.createQuery(BigDecimal.class);
+        Root<Product> root = query.from(Product.class);
+        query.select(criteriaBuilder.min(root.get("price")));
+        return session.createQuery(query).uniqueResult();
+    }
+
     public BigDecimal findMaxProductPrice(){
         Session session = sessionFactory.openSession();
         Query query = session.createQuery(" SELECT MAX (u.price) FROM Product u");
         return (BigDecimal) query.uniqueResult();
+    }
+
+    public BigDecimal findMaxProductPriceWithCriteria(){
+        Session session = sessionFactory.openSession();
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<BigDecimal> query = criteriaBuilder.createQuery(BigDecimal.class);
+        Root<Product> root = query.from(Product.class);
+        query.select(criteriaBuilder.max(root.get("price")));
+        return session.createQuery(query).uniqueResult();
     }
 
     public List<ProductTypeDto> findAllProductTypeDto(){

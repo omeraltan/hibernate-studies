@@ -115,4 +115,32 @@ public class ProductEntityService {
     public List<Product> findAllProductListByExpirationDateGeWithCriteria(Date date){
         return productDao.findAllProductListByExpirationDateGeWithCriteria(date);
     }
+
+    public Long sumProductAmountByProductTypeIdWithCriteria(){
+        return productDao.sumProductAmountByProductTypeIdWithCriteria();
+    }
+
+    public Long countProductAmountByProductTypeIdWithCriteria(Long productTypeId){
+        return productDao.countProductAmountByProductTypeIdWithCriteria(productTypeId);
+    }
+
+    public BigDecimal findMinProductPriceWithCriteria(){
+        return productDao.findMinProductPriceWithCriteria();
+    }
+
+    public BigDecimal findMaxProductPriceWithCriteria(){
+        return productDao.findMaxProductPriceWithCriteria();
+    }
+
+    public Double findAverageStockAmountWithCriteria(){
+        return productDao.findAverageStockAmountWithCriteria();
+    }
+
+    public List<ProductDto> findAllProductDtoWithCriteria(){
+        return productDao.findAllProductDtoWithCriteria();
+    }
+
+    public List<ProductInformationDto> findAllProductInformationDtoWithCriteria(){
+        return productDao.findAllProductInformationDtoWithCriteria();
+    }
 }
