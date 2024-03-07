@@ -3,6 +3,7 @@ package entityservice;
 import dao.ProductTypeDao;
 import domain.Product;
 import domain.ProductType;
+import dto.ProductTypeDto;
 import org.hibernate.criterion.MatchMode;
 
 import java.util.List;
@@ -28,5 +29,9 @@ public class ProductTypeEntityService {
 
     public List<ProductType> findProductTypeListByNameWithCriteria(String name, MatchMode matchMode){
         return productTypeDao.findProductTypeListByNameWithCriteria(name, matchMode);
+    }
+
+    public List<ProductTypeDto> findAllProductTypeDtoWithCriteria(){
+        return productTypeDao.findAllProductTypeDtoWithCriteria();
     }
 }

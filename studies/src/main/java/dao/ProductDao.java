@@ -236,14 +236,14 @@ public class ProductDao {
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<ProductInformationDto> query = criteriaBuilder.createQuery(ProductInformationDto.class);
         Root<Product> root = query.from(Product.class);
-        root.join("productTypeName", JoinType.INNER);
+        root.join("productType", JoinType.INNER);
         query.select(criteriaBuilder.construct(
             ProductInformationDto.class,
             root.get("id"),
             root.get("name"),
-            root.get("price")
-            //root.get("productTypeName"),
-            //root.get("enumProductType")
+            root.get("price"),
+            root.get("productType").get("name"),
+            root.get("productType").get("enumProductType")
         ));
         return session.createQuery(query).list();
     }
