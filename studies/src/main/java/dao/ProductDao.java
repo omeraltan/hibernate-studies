@@ -12,9 +12,10 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.TemporalType;
+import javax.persistence.criteria.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -45,6 +46,15 @@ public class ProductDao {
         query.setParameter("id", id);
         return (Product) query.uniqueResult();
     }
+    // Find By id With Criteria
+    public Product findByIdWithCriteria(Long id){
+        Session session = sessionFactory.openSession();
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<Product> query = criteriaBuilder.createQuery(Product.class);
+        Root<Product> root = query.from(Product.class);
+        query.select(root).where(criteriaBuilder.equal(root.get("id"), id));
+        return session.createQuery(query).uniqueResult();
+    }
 
     public List<Product> findAllProductListByStockAmountMinAndMax(Long min, Long max){
         Session session = sessionFactory.openSession();
@@ -64,10 +74,41 @@ public class ProductDao {
         return query.list();
     }
 
+    // Find All ProductList By Stock Amount Between Min And Max With Criteria
+    public List<Product> findAllProductListByStockAmountBetweenMinAndMaxWithCriteria(Long min, Long max){
+        Session session = sessionFactory.openSession();
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<Product> query = criteriaBuilder.createQuery(Product.class);
+        Root<Product> root = query.from(Product.class);
+        query.select(root).where(criteriaBuilder.between(root.get("stockAmount"), min, max));
+        return session.createQuery(query).list();
+    }
+
     public List<Product> findAllWithOrder(){
         Session session = sessionFactory.openSession();
         Query query = session.createQuery(" SELECT u FROM Product u" + " ORDER BY u.stockAmount, u.name");
         return query.list();
+    }
+
+    public List<Product> findAllWithOrderWithCriteria(){
+        Session session = sessionFactory.openSession();
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<Product> query = criteriaBuilder.createQuery(Product.class);
+        Root<Product> root = query.from(Product.class);
+        query.select(root);
+        // single order
+        // query.orderBy(criteriaBuilder.asc(root.get("stockAmount")));
+
+        // multiple order
+        // Order stockAmount = criteriaBuilder.asc(root.get("stockAmount"));
+        // Order name = criteriaBuilder.asc(root.get("name"));
+        // query.orderBy(stockAmount, name);
+
+        List<Order> orderList = new ArrayList<>();
+        orderList.add(criteriaBuilder.asc(root.get("stockAmount")));
+        orderList.add(criteriaBuilder.asc(root.get("name")));
+        query.orderBy(orderList);
+        return session.createQuery(query).list();
     }
 
     public List<Product> findAllWithOrderByLimit(int maxResult){
@@ -77,11 +118,33 @@ public class ProductDao {
         return query.list();
     }
 
+    public List<Product> findAllWithOrderByLimitWithCriteria(int maxResult){
+        Session session = sessionFactory.openSession();
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<Product> query = criteriaBuilder.createQuery(Product.class);
+        Root<Product> root = query.from(Product.class);
+        query.select(root);
+        query.orderBy(criteriaBuilder.asc(root.get("id")));
+
+        return session.createQuery(query).setMaxResults(maxResult).list();
+    }
+
     public List<Product> findAllProductListByExpirationDateGe(Date date){
         Session session = sessionFactory.openSession();
         Query query = session.createQuery(" SELECT u FROM Product u WHERE u.expirationDate >= :date");
         query.setParameter("date",date);
         return query.list();
+    }
+
+    public List<Product> findAllProductListByExpirationDateGeWithCriteria(Date expirationDate){
+        Session session = sessionFactory.openSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Product> query = builder.createQuery(Product.class);
+        Root<Product> root = query.from(Product.class);
+        ParameterExpression<Date> parameter = builder.parameter(Date.class);
+        Predicate tarih = builder.greaterThanOrEqualTo(root.get("expirationDate").as(Date.class), parameter);
+        query.where(tarih);
+        return session.createQuery(query).setParameter(parameter, expirationDate, TemporalType.DATE).list();
     }
 
     public Long sumProductAmountByProductTypeId(Long productType){

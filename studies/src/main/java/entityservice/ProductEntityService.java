@@ -95,4 +95,24 @@ public class ProductEntityService {
     public List<Product> findAllWithCriteria(){
         return productDao.findAllWithCriteria();
     }
+
+    public Product findByIdWithCriteria(Long id){
+        return productDao.findByIdWithCriteria(id);
+    }
+
+    public List<Product> findAllProductListByStockAmountBetweenMinAndMaxWithCriteria(Long min, Long max){
+        return productDao.findAllProductListByStockAmountBetweenMinAndMaxWithCriteria(min, max);
+    }
+
+    public List<Product> findAllWithOrderWithCriteria(){
+        return productDao.findAllWithOrderWithCriteria();
+    }
+
+    public List<Product> findAllWithOrderByLimitWithCriteria(int maxResult){
+        return productDao.findAllWithOrderByLimitWithCriteria(maxResult);
+    }
+
+    public List<Product> findAllProductListByExpirationDateGeWithCriteria(Date date){
+        return productDao.findAllProductListByExpirationDateGeWithCriteria(date);
+    }
 }

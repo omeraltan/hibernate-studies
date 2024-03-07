@@ -25,4 +25,8 @@ public class ProductTypeEntityService {
     public List<ProductType> findProductTypeListByName(String name, MatchMode matchMode){
         return productTypeDao.findProductTypeListByName(name, matchMode);
     }
+
+    public List<ProductType> findProductTypeListByNameWithCriteria(String name, MatchMode matchMode){
+        return productTypeDao.findProductTypeListByNameWithCriteria(name, matchMode);
+    }
 }

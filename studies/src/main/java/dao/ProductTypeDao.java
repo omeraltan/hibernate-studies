@@ -8,6 +8,9 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.query.Query;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.List;
 
 public class ProductTypeDao {
@@ -51,6 +54,34 @@ public class ProductTypeDao {
         }
         return query.list();
     }
+
+    // Criteria Api
+    public List<ProductType> findProductTypeListByNameWithCriteria(String name, MatchMode matchMode){
+
+        String parameter = "";
+        switch (matchMode){
+            case EXACT:
+                parameter = name;
+                break;
+            case START:
+                parameter = name + "%";
+                break;
+            case END:
+                parameter = "%" + name;
+                break;
+            case ANYWHERE:
+                parameter = "%" + name + "%";
+                break;
+        }
+
+        Session session = sessionFactory.openSession();
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<ProductType> query = criteriaBuilder.createQuery(ProductType.class);
+        Root<ProductType> root = query.from(ProductType.class);
+        query.select(root).where(criteriaBuilder.like(root.get("name"), parameter));
+        return session.createQuery(query).list();
+    }
+
 
 
 }
